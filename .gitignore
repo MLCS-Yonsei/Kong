@@ -1,0 +1,7 @@
+1_KongPC/results/*
+.DS_Store
+*.pyc
+*/__pycache__
+
+2_controlServer/node_modules/*
+*.pyc

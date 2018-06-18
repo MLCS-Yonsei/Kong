@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" ng-app="mlcs">
+<head>
+        <!-- Meta Info -->
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Script-Type" content="text/javascript" />
+        <meta http-equiv="Content-Style-Type" content="text/css" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title page-title>MLCS Control Server</title>
+        
+        <!-- ie9 미만 브라우저의 html5 태그 지원 -->
+        <!--[if lt IE 9]>
+                <script type="text/javascript" src="/js/html5shiv.min.js"></script>
+        <![endif]-->
+
+        <!-- 기본 스타일 로드 -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/animate.css">
+        <link id="loadBefore" rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+
+        <base href="/">
+</head>
+<body ng-controller="MainCtrl as main">
+        
+        <!-- Main view  -->
+        <!-- Wrapper-->
+        <div id="wrapper">
+
+                <!-- Navigation -->
+                <div ng-include="'/app/client/views/common/navigation.html'"></div>
+        
+                <!-- Page wraper -->
+                <!-- ng-class with current state name give you the ability to extended customization your view -->
+                <div id="page-wrapper" class="gray-bg {{$state.current.name}}">
+        
+                <!-- Page wrapper -->
+                <div ng-include="'/app/client/views/common/topnavbar.html'"></div>
+        
+                <!-- Main view  -->
+                <div ui-view="contents"></div>
+        
+                <!-- Footer -->
+                <div ng-include="'/app/client/views/common/footer.html'"></div>
+        
+                </div>
+                <!-- End page wrapper-->
+        
+        </div>
+        <!-- End wrapper-->
+                
+        <!-- jQuery and Bootstrap -->
+        <script src="/js/jquery/jquery-3.1.1.min.js"></script>
+        <script src="/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="/js/bootstrap/bootstrap.min.js"></script>
+
+        <!-- MetsiMenu -->
+        <script src="/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+        <!-- SlimScroll -->
+        <script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+        <!-- Peace JS -->
+        <script src="/js/plugins/pace/pace.min.js"></script>
+
+        <!-- Custom and plugin javascript -->
+        <script src="/js/inspinia.js"></script>
+
+        <!-- Main Angular scripts-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
+        <script src="js/angular/angular-sanitize.js"></script>
+        <script src="js/plugins/oclazyload/dist/ocLazyLoad.min.js"></script>
+        <script src="js/ui-router/angular-ui-router.min.js"></script>
+        <script src="js/bootstrap/ui-bootstrap-tpls-1.1.2.min.js"></script>
+
+        <script src="/app/client/app.js"></script>
+        <script src="/app/client/config/urlRouter.js"></script>
+        <script src="/app/client/config/auth.js"></script>
+        <script src="/app/client/config/api.js"></script>
+
+        <script src="/app/client/controllers/mainController.js"></script>
+        <script src="/app/client/controllers/dataFactories.js"></script>
+        
+</body>
+</html>
