@@ -59,7 +59,7 @@ class lapDistanceChecker(mp.Process):
                     'event' : ''
                 }
                 
-                if self.t == 0 and racestate == 2 :
+                if self.t == 0 and racestate == 2 and lab_distance < 100:
                     print(self.target_ip,'start')
                     self.t = self.t + 1
                     result['data']['event'] = 'start'
@@ -96,6 +96,9 @@ class lapDistanceChecker(mp.Process):
                 #     t += 1
                 #     print('끝났습니다')
                 #     result['data']['event'] = 'finish'
+
+                if lap_distance > 100:
+                    self.t = 0
 
                 if result['data']['event'] != '':
                     self.r.hset(self.target_ip, 'results', result)
