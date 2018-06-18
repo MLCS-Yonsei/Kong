@@ -636,7 +636,7 @@ def aPlayer(r, sims):
         time.sleep(0.1)
         for sim in sims:
             message = r.hget(sim[0],'results')
-            print(sim[0], message)
+            # print(sim[0], message)
             if message:
                 result = eval(message)
                 
@@ -656,6 +656,7 @@ def aPlayer(r, sims):
                     t1.start()
 
                     # 오디오 겹치지 않게 여기에 sleep 필요할수도.. 그러면 초 정보 가져와야함
+                    # 일단은 7초동안 sleep
                     r.hdel(sim[0],'results')
                     time.sleep(7)
 
