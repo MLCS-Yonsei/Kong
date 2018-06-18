@@ -64,7 +64,7 @@ class lapDistanceChecker(mp.Process):
                     self.t = self.t + 1
                     result['data']['event'] = 'start'
 
-                elif 90 < lap_distance < 110 :
+                elif 90 < lap_distance < 100 :
                     # print('터널입니다')
                     result['data']['event'] = 'tunnel'
 
@@ -91,6 +91,12 @@ class lapDistanceChecker(mp.Process):
                 elif 4800 < lap_distance < 4810 :
                     # print('거의 다 왔습니다')
                     result['data']['event'] = 'finish'
+
+                '''
+                + 이 외 lap_distance 일 때 random 하게 trigger하고, random한 pool에서 뽑하서 말하기
+                + 전체 랩길이 -> 데이터에 있음 -> 1/4 , 1/2, 3/4 지점 90% 지점
+                + 
+                '''
 
                 # if racestate == 3 and t ==1 :
                 #     t += 1

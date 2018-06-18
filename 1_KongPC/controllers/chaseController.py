@@ -57,7 +57,7 @@ class chaseChecker(mp.Process):
             for i, p in enumerate(participants):
                 if p['mName'] == target_name:
                     return i
-                    
+
         else:
             return False
 
@@ -100,7 +100,11 @@ class chaseChecker(mp.Process):
                 # Codes
                 if "participants" in gamedata:
                     rank, ecar_distance, fcar_distance, scar_distance, ranks = self.get_distance(gamedata)
-                    
+                    '''
+                    fcar_distance랑 ecar_distance랑 차이 해서 특정만큼 벌어지면 그때
+                    기다려줘요 멘트 ㄱ
+                    혹은 독주상황이라 볼 수 있음.
+                    '''
                     if ecar_distance > 200:
                         
                         # 앞차 쫓는 상황

@@ -44,6 +44,16 @@ class collisionChecker(mp.Process):
                 result['target_ip'] = self.target_ip
                 result['flag'] = 'collision'
 
+                '''
+                지금 도로를 이탈하였는지 확인하고, (terrein 부분 제거?)
+                전체 velocity가 특정 값으로 내려오면 행동불능 상태로 판명
+                
+                아니면 그냥
+                crash state 발생했을때
+                그 레벨 (1,2,3)에 대해 강도 멘트. 2는 거의 없고 1 : 가벼운 충돌, 3 : 강력한 충돌 위주로.
+
+                mworldpoisition -> 변화량 측정해서 lap_distance의 변화량의 어느 정도 보다 적으면 후진이나 차빼기 멘트
+                '''
                 collision = gamedata["wheelsAndTyres"]["mTerrain"][0] != 0 and gamedata["wheelsAndTyres"]["mTerrain"][2] !=0
                 velocity = sum( i*i for i in gamedata["motionAndDeviceRelated"]["mLocalVelocity"])
 
