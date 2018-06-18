@@ -9,6 +9,8 @@ import datetime
 import os
 import signal
 
+import sqlite3
+
 import redis
 
 class overtakeChecker(mp.Process):
@@ -34,12 +36,43 @@ class overtakeChecker(mp.Process):
         ranks = [info['mRacePosition'] for info in data["participants"]["mParticipantInfo"]]
         return ranks
 
+    def get_sim_name(self, target_ip, gamedata):
+        participants = gamedata['participants']['mParticipantInfo']
+
+        # DB for config
+        conn = sqlite3.connect("./config/db/test.db")
+        cur = conn.cursor()
+
+        # Getting Simulator info
+        cur.execute("select * from simulators")
+        _sims = cur.fetchall()
+        
+        # Connection 닫기
+        conn.close()
+
+        target_name = False
+
+        sims = []
+        for sim in _sims:
+            if sim[0] == target_ip:
+                target_name = sim[1]
+
+        if target_name:
+            for i, p in enumerate(participants):
+                if p['mName'] == target_name:
+                    return i
+
+        else:
+            return False
+
+        
+
     def run(self):
         while True:
-            time.sleep(0.1)
+            # time.sleep(0.1)
 
             message = self.r.hget(self.target_ip,'msg')
-
+            self.r.hdel(self.target_ip,'msg')
             if message:
                 data = eval(message)
 
@@ -51,18 +84,18 @@ class overtakeChecker(mp.Process):
                     ranks = self.get_rank(gamedata)
 
                     if len(ranks) > 1:
-                        r0_t1 = ranks[0]
+                        r0_t1 = ranks[self.get_sim_name(self.target_ip,gamedata)]
                         
                         if self.r0_t0 != 0:
                             
                             if self.r0_t0 > r0_t1:
                                 # Overtaked
-                                print('추월')
+                                print(self.target_ip,'추월')
                                 self.c = ranks.index(r0_t1 + 1)
                                 self.status = True
                             elif self.r0_t0 < r0_t1:
                                 # Overtaken
-                                print('추월당함')
+                                print(self.target_ip,'추월당함')
                                 self.c = ranks.index(r0_t1 - 1)
                                 self.status = False
                             else:

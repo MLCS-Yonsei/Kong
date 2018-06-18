@@ -32,7 +32,7 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
         while True:
             message = self.r.hget(self.target_ip,'msg')
-            
+            self.r.hdel(self.target_ip,'msg')
             if message:
 
                 # data = {key.decode(): value.decode() for (key, value) in message.items()}
@@ -60,7 +60,7 @@ class lapDistanceChecker(mp.Process):
                 }
                 
                 if self.t == 0 and racestate == 2 :
-                    # print('start')
+                    print(self.target_ip,'start')
                     self.t = self.t + 1
                     result['data']['event'] = 'start'
 
@@ -101,6 +101,6 @@ class lapDistanceChecker(mp.Process):
                     self.r.hset(self.target_ip, 'results', result)
 
 
-            time.sleep(0.5)
+            # time.sleep(0.5)
                 
                 

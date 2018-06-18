@@ -487,8 +487,9 @@ def rb_start():
     gv.app_status = checkAppStatus()
     
     # Init Audio Player
-    gv.player = multiprocessing.Process(target=aPlayer, args=(gv.r, sims))
-    gv.player.start()
+    # gv.player = multiprocessing.Process(target=aPlayer, args=(gv.r, sims))
+    # gv.player.start()
+    gv.player = aPlayer_start(gv.r, sims)
 
     # Storing Processes
     gv.processes = []
@@ -560,8 +561,9 @@ def rb_stop():
 
     # Stopping Audio Player
     try:
-        gv.player.terminate()
-        gv.player.join()
+        # gv.player.terminate()
+        # gv.player.join()
+        aPlayer_stop()
     except:
         pass
 
@@ -622,7 +624,7 @@ def stopGettingPcarsData(crestProcesses):
     updateAppStatus(app_status)
 
     return crestProcesses
-
+'''
 def aPlayer(r, sims):
     channels = r.pubsub()
     
@@ -633,16 +635,17 @@ def aPlayer(r, sims):
 
     # print(msg_buffer)
     while True:
-        time.sleep(0.1)
         for sim in sims:
             message = r.hget(sim[0],'results')
-            # print(sim[0], message)
+            r.hdel(sim[0],'results')
+            
             if message:
+                print("D1",sim[0], message)
                 result = eval(message)
                 
                 msg_time = datetime.datetime.strptime(result['current_time'], '%Y-%m-%d %H:%M:%S.%f')
-                ref_time = datetime.datetime.now() - datetime.timedelta(seconds=2)
-
+                ref_time = datetime.datetime.now() - datetime.timedelta(seconds=10)
+                # print(msg_time,ref_time)
                 if msg_time > ref_time:
                     # result = {key.decode(): value.decode() for (key, value) in message.items()}
                     
@@ -657,12 +660,69 @@ def aPlayer(r, sims):
 
                     # 오디오 겹치지 않게 여기에 sleep 필요할수도.. 그러면 초 정보 가져와야함
                     # 일단은 7초동안 sleep
-                    r.hdel(sim[0],'results')
-                    time.sleep(7)
-
+                    
+        # time.sleep(7)
+'''
 def aPlayerThread(result):
     p = audioPlayer(result)
-    print(p)
+
+def aPlayerMP(r,sim):
+    while True:
+        message = r.hget(sim[0],'results')
+        
+        if message:
+            r.hdel(sim[0],'results')
+            print("D1",sim[0], message)
+            result = eval(message)
+            
+            msg_time = datetime.datetime.strptime(result['current_time'], '%Y-%m-%d %H:%M:%S.%f')
+            ref_time = datetime.datetime.now() - datetime.timedelta(seconds=10)
+            # print(msg_time,ref_time)
+            if msg_time > ref_time:
+                # result = {key.decode(): value.decode() for (key, value) in message.items()}
+                
+                # 2초보다 오래된 메세지 제거
+                # print(msg_buffer[result['target_ip']])
+
+                t1 = threading.Thread(target=aPlayerThread, args=(result,))
+                t1.daemon = True 
+                t1.start()
+
+                time.sleep(5)
+
+                t1.join()
+                # 오디오 겹치지 않게 여기에 sleep 필요할수도.. 그러면 초 정보 가져와야함
+                # 일단은 7초동안 sleep
+
+def aPlayer_start(r, sims):
+    aPlayer_stop()
+    
+    print("Starting aPlayer")
+
+    channels = r.pubsub()
+    
+    # 여러 채널이 가능한지 추가 확인 필요
+    # 여러 시뮬레이터가 results 채널로 모두 송신 -> 수신되는 results 값 안에 target_ip 있음.
+    player = []
+    for sim in sims:
+        channels.subscribe(sim[0])
+
+        mp = multiprocessing.Process(target=aPlayerMP, args=(r,sim,))
+        mp.start()
+
+        player.append(mp)
+    
+    return player
+
+def aPlayer_stop():
+    print("Stopping aPlayer")
+    if gv.player is not None:
+        for mp in gv.player:
+            mp.terminate()
+            mp.join() 
+
+        gv.player = None
+
 
 def interrupt():
     stopGettingPcarsData(gv.crestProcesses)

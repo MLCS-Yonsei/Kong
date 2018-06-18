@@ -34,7 +34,6 @@ class audioPlayer():
             play(sound)
             # time.sleep(sound.duration_seconds)
 
-        return sound.duration_seconds
 
     def overtake(self):
         status = self.data['status']
@@ -50,8 +49,8 @@ class audioPlayer():
             '/audio/nayoung/overtaken/c-08.wav','/audio/nayoung/overtaken/c-09.wav','/audio/nayoung/overtaken/c-10.wav']
 
         audio_file = random.choice(audio_files)
-        sec = self.playFile(audio_file)
-        return sec
+        self.playFile(audio_file)
+
 
     def chase(self):
         chase = self.data['chasing']
@@ -80,8 +79,7 @@ class audioPlayer():
             '/audio/nayoung/escape_bad/c-30.wav','/audio/nayoung/escape_bad/c-31.wav']
 
         audio_file = random.choice(audio_files)
-        sec = self.playFile(audio_file)
-        return sec
+        self.playFile(audio_file)
 
     def lapDistance(self):
 
@@ -117,6 +115,5 @@ class audioPlayer():
             '/audio/nayoung/finish/c-39.wav']
 
         audio_file = random.choice(audio_files)
-        sec = self.playFile(audio_file)
-        return sec
+        self.playFile(audio_file)
 
