@@ -52,7 +52,6 @@ class overtakeChecker(mp.Process):
 
         target_name = False
 
-        sims = []
         for sim in _sims:
             if sim[0] == target_ip:
                 target_name = sim[1]
