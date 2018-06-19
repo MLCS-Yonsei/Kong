@@ -17,6 +17,7 @@ import redis
 from overtakeController import overtakeChecker
 from chaseController import chaseChecker
 from lapDistanceController import lapDistanceChecker
+from collisionController import collisionChecker
 
 class controller():
 
@@ -45,6 +46,15 @@ class controller():
     def lapDistanceChecker(self, r, target_ip):
         q = mp.Queue()
         job = lapDistanceChecker(q,r,target_ip)
+        self.queues.append(q)
+        self.jobs.append(job)
+        job.start()
+
+        return job
+
+    def collisionChecker(self, r, target_ip):
+        q = mp.Queue()
+        job = collisionChecker(q,r,target_ip)
         self.queues.append(q)
         self.jobs.append(job)
         job.start()

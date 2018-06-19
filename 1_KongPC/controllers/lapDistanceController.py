@@ -11,6 +11,8 @@ import signal
 
 import redis
 
+import random
+
 class lapDistanceChecker(mp.Process):
 
     def __init__(self,que,r,target_ip):
@@ -26,13 +28,13 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
 
         # Variables
-
+        self.msg_rate = 0.05
 
     def run(self):
         self.t = 0
         while True:
             message = self.r.hget(self.target_ip,'msg')
-            self.r.hdel(self.target_ip,'msg')
+
             if message:
 
                 # data = {key.decode(): value.decode() for (key, value) in message.items()}
@@ -91,7 +93,10 @@ class lapDistanceChecker(mp.Process):
                 elif 4800 < lap_distance < 4810 :
                     # print('거의 다 왔습니다')
                     result['data']['event'] = 'finish'
-
+                else:
+                    if random.random() < self.msg_rate:
+                        pass
+                        # result['data']['event'] = 'random'
                 '''
                 + 이 외 lap_distance 일 때 random 하게 trigger하고, random한 pool에서 뽑하서 말하기
                 + 전체 랩길이 -> 데이터에 있음 -> 1/4 , 1/2, 3/4 지점 90% 지점
@@ -107,6 +112,7 @@ class lapDistanceChecker(mp.Process):
                     self.t = 0
 
                 if result['data']['event'] != '':
+                    self.r.hdel(self.target_ip,'msg')
                     self.r.hset(self.target_ip, 'results', result)
 
 

@@ -90,7 +90,7 @@ class chaseChecker(mp.Process):
         while True:
             # time.sleep(0.1)
             message = self.r.hget(self.target_ip,'msg')
-            self.r.hdel(self.target_ip,'msg')
+            # self.r.hdel(self.target_ip,'msg')
             if message:
                 data = eval(message)
 
@@ -128,16 +128,17 @@ class chaseChecker(mp.Process):
                                         'acc': ''
                                     }  
 
-                                    if self.recent_fcar_distances[0] - self.recent_fcar_distances[19] < 100 and self.recent_fcar_distances[19] < 50:
+                                    if self.recent_fcar_distances[19] - self.recent_fcar_distances[0] < 100 and self.recent_fcar_distances[19] < 50:
                                         # 잘 쫓아가고 있을때
                                         print(self.target_ip,'잘 쫒아감!')
                                         result['data']['acc'] = True
-                                    elif self.recent_fcar_distances[0] - self.recent_fcar_distances[19] > 100 and self.recent_fcar_distances[19] < 50:
+                                    elif self.recent_fcar_distances[19] - self.recent_fcar_distances[0] > 100 and self.recent_fcar_distances[19] < 50:
                                         # 잘 쫓아가지 못할때
                                         print(self.target_ip,'잘 못쫒아감!')
                                         result['data']['acc'] = False
 
                                     if result['data']['acc'] != '':
+                                        self.r.hdel(self.target_ip,'msg')
                                         self.r.hset(self.target_ip, 'results', result)
                                 
                             elif len(self.recent_fcar_distances) < 20:
@@ -167,16 +168,17 @@ class chaseChecker(mp.Process):
                                         'rank': rank,
                                     }  
 
-                                    if self.recent_scar_distances[0] - self.recent_scar_distances[19] > 100 and self.recent_scar_distances[19] < 50:
+                                    if self.recent_scar_distances[19] - self.recent_scar_distances[0] > 100 and self.recent_scar_distances[19] < 50:
                                         # 잘 도망가고 있을때
                                         print(self.target_ip,'잘 도망가!')
                                         result['data']['acc'] = True
-                                    elif  self.recent_scar_distances[0] - self.recent_scar_distances[19] < 100 and self.recent_scar_distances[19] < 50:
+                                    elif  self.recent_scar_distances[19] - self.recent_scar_distances[0] < 100 and self.recent_scar_distances[19] < 50:
                                         # 따라잡히고 있을때
                                         print(self.target_ip,'쫓아와!')
                                         result['data']['acc'] = False
 
                                     if result['data']['acc'] != '':
+                                        self.r.hdel(self.target_ip,'msg')
                                         self.r.hset(self.target_ip, 'results', result)
                                 
                             elif len(self.recent_scar_distances) < 20:

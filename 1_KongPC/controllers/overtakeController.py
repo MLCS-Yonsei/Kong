@@ -71,7 +71,7 @@ class overtakeChecker(mp.Process):
             # time.sleep(0.1)
 
             message = self.r.hget(self.target_ip,'msg')
-            self.r.hdel(self.target_ip,'msg')
+            # self.r.hdel(self.target_ip,'msg')
             if message:
                 data = eval(message)
 
@@ -113,6 +113,7 @@ class overtakeChecker(mp.Process):
                                 'rank': r0_t1
                             }
 
+                            self.r.hdel(self.target_ip,'msg')
                             self.r.hset(self.target_ip, 'results', result)
 
                         self.r0_t0 = r0_t1

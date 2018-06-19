@@ -117,3 +117,13 @@ class audioPlayer():
         audio_file = random.choice(audio_files)
         self.playFile(audio_file)
 
+    def collision(self):
+
+        crash_state = int(self.data['crash_state'])
+
+        if crash_state == 1:
+            pass
+        
+        
+            
+

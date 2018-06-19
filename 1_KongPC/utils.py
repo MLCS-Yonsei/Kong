@@ -498,6 +498,10 @@ def rb_start():
             _ot = gv.c.checkOvertake(gv.r,sim[0])
             gv.processes.append(_ot)
 
+            # collision checker
+            _co = gv.c.collisionChecker(gv.r,sim[0])
+            gv.processes.append(_co)
+
         if gv.app_status["ruleBase"]["chase"]:
             _cc = gv.c.chaseChecker(gv.r,sim[0])
             gv.processes.append(_cc)
@@ -836,6 +840,7 @@ def get_crest_data(target_ip, r):
                     conn.close()
 
                     # time.sleep(0.1)
+                    r.hdel(target_ip,'msg')
                     r.hset(target_ip, 'msg', gamedata)
 
             else:
