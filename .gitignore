@@ -5,3 +5,8 @@
 
 2_controlServer/node_modules/*
 *.pyc
+
+.eggs
+build
+*.egg
+pcars.egg-info

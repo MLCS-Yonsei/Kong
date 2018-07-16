@@ -35,6 +35,8 @@ from audioPlayer import audioPlayer
 import serial
 import serial.tools.list_ports
 
+from pcars_stream.src.pcars.stream import PCarsStreamReceiver
+
 def data_collect_start():
     # Checking Available Simulators
     sims = checkSims()   
@@ -763,7 +765,19 @@ def interrupt():
 
     updateAppStatus(gv.app_status)
     serial_listener_stop()
-    
+
+class PCarsListener(object):
+    def __init__(self):
+        self.data = None
+
+    def handlePacket(self, data):
+        # You probably want to do something more exciting here
+        # You probably also want to switch on data.packetType
+        # See listings in packet.py for packet types and available fields for each
+        # print(data._data)
+        self.data = data._data
+        # print(self.data)
+
 def send_crest_requset(url, flag, option):
     conn = http.client.HTTPConnection(url, timeout=1)
     try:
@@ -805,7 +819,6 @@ def check_to_record():
         for target_ip, flag in gv.game_flag.items():
             if flag == True:
                 _f = False
-                
 
         if _f == True:
             record_stop()
