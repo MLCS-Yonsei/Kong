@@ -59,22 +59,23 @@ class collisionChecker(mp.Process):
                     if 'carDamage' in gamedata:
                         crash_state = int(gamedata['carDamage']['mCrashState'])
 
-                        if crash_state == 1:
-                            print(self.target_ip, "lv.1 충돌 발생")
-
-                        elif crash_state == 2:
-                            print(self.target_ip, "lv.2 충돌 발생")
-
-                        elif crash_state == 3:
-                            print(self.target_ip, "lv.3 충돌 발생")
-
-                        result['data'] = {
-                            'crash_state' : crash_state,
-                            'moving' : True,
-                            
-                        }
-
                         if crash_state > 0:
+                            if crash_state == 1:
+                                print(self.target_ip, "lv.1 충돌 발생")
+
+                            elif crash_state == 2:
+                                print(self.target_ip, "lv.2 충돌 발생")
+
+                            elif crash_state == 3:
+                                print(self.target_ip, "lv.3 충돌 발생")
+
+                            result['data'] = {
+                                'crash_state' : crash_state,
+                                'moving' : True,
+                                
+                            }
+
+                        
                             self.r.hdel(self.target_ip,'msg')
                             self.r.hset(self.target_ip, 'results', result)
 

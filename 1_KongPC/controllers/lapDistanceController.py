@@ -28,7 +28,7 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
 
         # Variables
-        self.msg_rate = 0.05
+        self.msg_rate = 0.005
 
     def run(self):
         self.t = 0
@@ -78,6 +78,10 @@ class lapDistanceChecker(mp.Process):
                     # print('앞에 급한 커브입니다')
                     result['data']['event'] = 'deep_curve'
 
+                elif 1440 < lap_distance < 1460 :
+                    # 1/4 지점
+                    result['data']['event'] = 'section_1'
+
                 elif 1890 < lap_distance < 1910 :
                     # print('앞에 완만한 s자 커브입니다')
                     result['data']['event'] = 'curve'
@@ -85,22 +89,37 @@ class lapDistanceChecker(mp.Process):
                 elif 2490 < lap_distance < 2510 :
                     # print('앞에 완만한 s자 커브입니다')
                     result['data']['event'] = 'curve'
+                
+                elif 2890 < lap_distance < 2810 :
+                    # 1/2 지점
+                    result['data']['event'] = 'section_2'
 
                 elif 3290 < lap_distance < 3310 :
                     # print('이제부터 직선 구간입니다')
                     result['data']['event'] = 'straight'
 
-                elif 4800 < lap_distance < 4810 :
+                elif 4320 < lap_distance < 4340 :
+                    # 3/4 지점
+                    result['data']['event'] = 'section_3'
+
+                elif 4800 < lap_distance < 4820 :
                     # print('거의 다 왔습니다')
                     result['data']['event'] = 'finish'
                 else:
                     if random.random() < self.msg_rate:
-                        pass
-                        # result['data']['event'] = 'random'
+                        random_events = [
+                            'tech', 
+                            'cheer', 
+                            'humor'
+                        ]
+                        result['data']['event'] = random.choice(random_events)
                 '''
                 + 이 외 lap_distance 일 때 random 하게 trigger하고, random한 pool에서 뽑하서 말하기
                 + 전체 랩길이 -> 데이터에 있음 -> 1/4 , 1/2, 3/4 지점 90% 지점
-                + 
+                section_1
+                section_2
+                section_3
+
                 '''
 
                 # if racestate == 3 and t ==1 :

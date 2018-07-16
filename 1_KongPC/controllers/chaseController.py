@@ -125,7 +125,8 @@ class chaseChecker(mp.Process):
                                     result['data'] = {
                                         'chasing': True,
                                         'rank': rank,
-                                        'acc': ''
+                                        'acc': '',
+                                        'alone': False
                                     }  
 
                                     if self.recent_fcar_distances[19] - self.recent_fcar_distances[0] < 100 and self.recent_fcar_distances[19] < 50:
@@ -166,6 +167,7 @@ class chaseChecker(mp.Process):
                                     result['data'] = {
                                         'chasing': False,
                                         'rank': rank,
+                                        'alone': False
                                     }  
 
                                     if self.recent_scar_distances[19] - self.recent_scar_distances[0] > 100 and self.recent_scar_distances[19] < 50:
