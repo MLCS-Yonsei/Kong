@@ -58,8 +58,7 @@ class chaseChecker(mp.Process):
                 if p['mName'] == target_name:
                     return i
 
-        else:
-            return False
+        return False
 
         
 
@@ -71,20 +70,25 @@ class chaseChecker(mp.Process):
         ecar_current_lap = data["participants"]["mParticipantInfo"][0]["mLapsCompleted"]
         ecar_distance = data["participants"]["mParticipantInfo"][0]["mCurrentLapDistance"]
 
-        if ranks[self.get_sim_name(self.target_ip,data)] != min(ranks):
-            fcar_current_lap = data["participants"]["mParticipantInfo"][ranks.index(ranks[self.get_sim_name(self.target_ip,data)]-1)]["mLapsCompleted"]
-            fcar_distance = data["participants"]["mParticipantInfo"][ranks.index(ranks[self.get_sim_name(self.target_ip,data)]-1)]["mCurrentLapDistance"] - ecar_distance + lap_length * fcar_current_lap
-        else:
-            fcar_distance = ecar_distance
-        
-        if ranks[self.get_sim_name(self.target_ip,data)] != max(ranks):
-            scar_current_lap = data["participants"]["mParticipantInfo"][ranks.index(ranks[self.get_sim_name(self.target_ip,data)]+1)]["mLapsCompleted"]
-            scar_distance = ecar_distance - data["participants"]["mParticipantInfo"][ranks.index(ranks[self.get_sim_name(self.target_ip,data)]+1)]["mCurrentLapDistance"] + lap_length * scar_current_lap
-        else:
-            scar_distance = ecar_distance
+        sim_index = self.get_sim_name(self.target_ip,data)
+
+        if sim_index is not None:
+            if ranks[sim_index] != min(ranks):
+                fcar_current_lap = data["participants"]["mParticipantInfo"][ranks.index(ranks[sim_index]-1)]["mLapsCompleted"]
+                fcar_distance = data["participants"]["mParticipantInfo"][ranks.index(ranks[sim_index]-1)]["mCurrentLapDistance"] - ecar_distance + lap_length * fcar_current_lap
+            else:
+                fcar_distance = ecar_distance
+            
+            if ranks[sim_index] != max(ranks):
+                scar_current_lap = data["participants"]["mParticipantInfo"][ranks.index(ranks[sim_index]+1)]["mLapsCompleted"]
+                scar_distance = ecar_distance - data["participants"]["mParticipantInfo"][ranks.index(ranks[sim_index]+1)]["mCurrentLapDistance"] + lap_length * scar_current_lap
+            else:
+                scar_distance = ecar_distance
 
 
-        return ranks[self.get_sim_name(self.target_ip,data)], ecar_distance, fcar_distance, scar_distance, ranks
+            return ranks[sim_index], ecar_distance, fcar_distance, scar_distance, ranks
+        else:
+            return False
 
     def run(self):
         while True:

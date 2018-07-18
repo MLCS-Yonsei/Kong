@@ -11,7 +11,7 @@ dir = os.path.dirname(os.path.abspath(__file__))
 class audioPlayer():
     def __init__(self, result):
         self.method = getattr(self, result['flag'], lambda: "nothing")
-        
+
         self.data = result['data']
         self.target_ip = result['target_ip']
         if self.target_ip == 'localhost':
@@ -100,7 +100,7 @@ class audioPlayer():
 
     def collision(self):
         crash_state = self.data['crash_state']
-
+        print("Coll ", crash_state)
         if crash_state == 1:
             # 충격 Lv.1
             audio_files =   list(range(78,81)) + \
@@ -115,9 +115,13 @@ class audioPlayer():
             # 충격 Lv.3
             audio_files =   list(range(84,87)) + \
                             list(range(92,95))
+        else:
+            audio_files = []
 
-        audio_file = random.choice(audio_files)
-        self.playFile(audio_file)
+        if len(audio_files) > 0:
+            print("AP : Collision")
+            audio_file = random.choice(audio_files)
+            self.playFile(audio_file)
 
     def random(self):
         event = self.data['event']
@@ -194,13 +198,5 @@ class audioPlayer():
             audio_file = random.choice(audio_files)
             self.playFile(audio_file)
 
-    def collision(self):
-
-        crash_state = int(self.data['crash_state'])
-
-        if crash_state == 1:
-            pass
-        
-        
             
 

@@ -25,6 +25,7 @@ class collisionChecker(mp.Process):
 
         # Variables
         self.acc_lap_distances = []
+        self.msg_rate = 1
 
     def run(self):
         while True:
@@ -59,26 +60,27 @@ class collisionChecker(mp.Process):
                 if 'carDamage' in gamedata:
                     crash_state = int(gamedata['carDamage']['mCrashState'])
 
-                    if crash_state > 0:
-                        if crash_state == 1:
-                            print(self.target_ip, "lv.1 충돌 발생")
+                    if random.random() < self.msg_rate:
+                        if crash_state > 0:
+                            if crash_state == 1:
+                                print(self.target_ip, "lv.1 충돌 발생")
 
-                        elif crash_state == 2:
-                            print(self.target_ip, "lv.2 충돌 발생")
+                            elif crash_state == 2:
+                                print(self.target_ip, "lv.2 충돌 발생")
 
-                        elif crash_state == 3:
-                            print(self.target_ip, "lv.3 충돌 발생")
+                            elif crash_state == 3:
+                                print(self.target_ip, "lv.3 충돌 발생")
 
-                        result['data'] = {
-                            'crash_state' : crash_state,
-                            'moving' : True,
-                            
-                        }
-
-                    
-                        self.r.hdel(self.target_ip,'msg')
-                        self.r.hset(self.target_ip, 'results', result)
-
+                            result['data'] = {
+                                'crash_state' : crash_state,
+                                'moving' : True,
+                                
+                            }
+                        
+                            self.r.hdel(self.target_ip,'msg')
+                            self.r.hset(self.target_ip, 'results', result)
+                time.sleep(0.5)
+                '''
                 # 이동없음 상태 판별
                 if 'motionAndDeviceRelated' in gamedata and 'eventInformation' in gamedata and 'participants' in gamedata:
                     lap_length = gamedata["eventInformation"]["mTrackLength"] # 랩 길이
@@ -110,10 +112,7 @@ class collisionChecker(mp.Process):
 
                     elif len(self.acc_lap_distances) < 40:
                             self.acc_lap_distances.append(lap_distance)
-
                         
-
-                    ''' 
                     # collision = gamedata["wheelsAndTyres"]["mTerrain"][0] != 0 and gamedata["wheelsAndTyres"]["mTerrain"][2] !=0
                     # velocity = sum( i*i for i in gamedata["motionAndDeviceRelated"]["mLocalVelocity"])
 

@@ -678,13 +678,14 @@ def aPlayerMP(r,sim):
         
         if message:
             r.hdel(sim[0],'results')
-            print("D1",sim[0], message)
+            
             result = eval(message)
             
             msg_time = datetime.datetime.strptime(result['current_time'], '%Y-%m-%d %H:%M:%S.%f')
             ref_time = datetime.datetime.now() - datetime.timedelta(seconds=10)
             # print(msg_time,ref_time)
             if msg_time > ref_time:
+                print("D1",sim[0], message)
                 # result = {key.decode(): value.decode() for (key, value) in message.items()}
                 
                 # 2초보다 오래된 메세지 제거
