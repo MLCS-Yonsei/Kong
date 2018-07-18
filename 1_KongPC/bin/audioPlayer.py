@@ -26,7 +26,8 @@ class audioPlayer():
     def playFile(self, file_path):
         print("Playing...",file_path)
         if self.network_flag:
-            sound = AudioSegment.from_wav(dir + self.audio_apth + str(file_path) + '.wav')
+            file_path = self.audio_path + str(file_path) + '.wav'
+            # sound = AudioSegment.from_wav(dir + file_path)
             url = 'http://' + self.target_ip.split(':')[0] + ':3000/play?path=' + file_path
             r = requests.get(url)
             # time.sleep(sound.duration_seconds)
@@ -66,7 +67,7 @@ class audioPlayer():
                 # 앞선 독주
                 audio_files = list(range(164,166))
 
-            else rank > 1:
+            elif rank > 1:
                 # 뒤쳐진 독주
                 audio_files = list(range(166,168))
 
@@ -140,6 +141,7 @@ class audioPlayer():
 
         event = self.data['event']
 
+        audio_files = []
         if event == 'start':
             # 시작
             audio_files =   list(range(95,98)) + \
@@ -188,8 +190,9 @@ class audioPlayer():
             # 3구간
             audio_files =   list(range(152,153))
 
-        audio_file = random.choice(audio_files)
-        self.playFile(audio_file)
+        if len(audio_files) > 0:
+            audio_file = random.choice(audio_files)
+            self.playFile(audio_file)
 
     def collision(self):
 

@@ -52,10 +52,10 @@ def play():
 
     seg = AudioSegment.from_wav(file_path)
     p = pyaudio.PyAudio()
-    stream = p.open(format=p.get_format_from_width(seg.sample_width),
-channels=seg.channels,
-rate=seg.frame_rate,
-output=True)
+    stream = p.open(format=pyaudio.paInt32,
+                    channels=seg.channels,
+                    rate=seg.frame_rate,
+                    output=True)
 
     # break audio into half-second chunks (to allows keyboard interrupts)
     for chunk in make_chunks(seg, 500):
