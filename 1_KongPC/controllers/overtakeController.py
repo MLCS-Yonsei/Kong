@@ -55,14 +55,14 @@ class overtakeChecker(mp.Process):
         for sim in _sims:
             if sim[0] == target_ip:
                 target_name = sim[1]
-
+        print("TTT",target_name)
         if target_name:
             for i, p in enumerate(participants):
+                print(p['mName'])
                 if p['mName'] == target_name:
                     return i
 
-        else:
-            return False
+        return False
 
         
 
@@ -83,6 +83,7 @@ class overtakeChecker(mp.Process):
                     sim_index = self.get_sim_name(self.target_ip,gamedata)
                     lap_length = gamedata["eventInformation"]["mTrackLength"] # 랩 길이
                     lap_completed = gamedata["participants"]["mParticipantInfo"][sim_index]["mLapsCompleted"]
+                    
                     lap_distance = gamedata["participants"]["mParticipantInfo"][sim_index]["mCurrentLapDistance"] + lap_length * lap_completed
 
                     if lap_distance > 10:
