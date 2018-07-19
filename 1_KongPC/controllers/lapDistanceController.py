@@ -28,7 +28,7 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
 
         # Variables
-        self.msg_rate = 0.00005
+        self.msg_rate = 0.000005
 
     def run(self):
         self.t = 0
@@ -66,7 +66,7 @@ class lapDistanceChecker(mp.Process):
                     self.t = self.t + 1
                     result['data']['event'] = 'start'
 
-                elif 90 < lap_distance < 100 :
+                elif 90 < lap_distance < 95 :
                     # print('터널입니다')
                     result['data']['event'] = 'tunnel'
 
@@ -107,6 +107,7 @@ class lapDistanceChecker(mp.Process):
                     result['data']['event'] = 'finish'
                 else:
                     if random.random() < self.msg_rate:
+                        result['flag'] = 'random'
                         random_events = [
                             'tech', 
                             'cheer', 

@@ -78,10 +78,9 @@ class collisionChecker(mp.Process):
                                     'moving' : True,
                                     
                                 }
-                            
                                 self.r.hdel(self.target_ip,'msg')
                                 self.r.hset(self.target_ip, 'results', result)
-                    time.sleep(0.5)
+                    time.sleep(0.4)
                     '''
                     # 이동없음 상태 판별
                     if 'motionAndDeviceRelated' in gamedata and 'eventInformation' in gamedata and 'participants' in gamedata:
