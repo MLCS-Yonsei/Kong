@@ -28,7 +28,7 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
 
         # Variables
-        self.msg_rate = 0.005
+        self.msg_rate = 0.05
 
     def run(self):
         self.t = 0
