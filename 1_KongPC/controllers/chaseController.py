@@ -92,7 +92,7 @@ class chaseChecker(mp.Process):
 
     def run(self):
         while True:
-            # time.sleep(0.1)
+            time.sleep(0.3)
             message = self.r.hget(self.target_ip,'msg')
             # self.r.hdel(self.target_ip,'msg')
             if message:
