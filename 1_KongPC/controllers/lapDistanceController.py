@@ -28,7 +28,7 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
 
         # Variables
-        self.msg_rate = 0.000005
+        self.msg_rate = 0.0005
 
     def run(self):
         self.t = 0
@@ -61,79 +61,80 @@ class lapDistanceChecker(mp.Process):
                     'event' : ''
                 }
                 
-                if self.t == 0 and racestate == 2 and lap_distance < 100:
-                    print(self.target_ip,'start')
-                    self.t = self.t + 1
-                    result['data']['event'] = 'start'
+                if racestate == 2:
+                    if self.t == 0 and racestate == 2 and lap_distance < 100:
+                        print(self.target_ip,'start')
+                        self.t = self.t + 1
+                        result['data']['event'] = 'start'
 
-                elif 90 < lap_distance < 95 :
-                    # print('터널입니다')
-                    result['data']['event'] = 'tunnel'
+                    elif 90 < lap_distance < 95 :
+                        # print('터널입니다')
+                        result['data']['event'] = 'tunnel'
 
-                elif 790 < lap_distance < 810 :
-                    # print('앞에 급한 커브입니다')
-                    result['data']['event'] = 'deep_curve'
-                
-                elif 1240 < lap_distance < 1260 :
-                    # print('앞에 급한 커브입니다')
-                    result['data']['event'] = 'deep_curve'
+                    elif 790 < lap_distance < 810 :
+                        # print('앞에 급한 커브입니다')
+                        result['data']['event'] = 'deep_curve'
+                    
+                    elif 1240 < lap_distance < 1260 :
+                        # print('앞에 급한 커브입니다')
+                        result['data']['event'] = 'deep_curve'
 
-                elif 1440 < lap_distance < 1460 :
-                    # 1/4 지점
-                    result['data']['event'] = 'section_1'
+                    elif 1440 < lap_distance < 1460 :
+                        # 1/4 지점
+                        result['data']['event'] = 'section_1'
 
-                elif 1890 < lap_distance < 1910 :
-                    # print('앞에 완만한 s자 커브입니다')
-                    result['data']['event'] = 'curve'
+                    elif 1890 < lap_distance < 1910 :
+                        # print('앞에 완만한 s자 커브입니다')
+                        result['data']['event'] = 'curve'
 
-                elif 2490 < lap_distance < 2510 :
-                    # print('앞에 완만한 s자 커브입니다')
-                    result['data']['event'] = 'curve'
-                
-                elif 2890 < lap_distance < 2810 :
-                    # 1/2 지점
-                    result['data']['event'] = 'section_2'
+                    elif 2490 < lap_distance < 2510 :
+                        # print('앞에 완만한 s자 커브입니다')
+                        result['data']['event'] = 'curve'
+                    
+                    elif 2890 < lap_distance < 2810 :
+                        # 1/2 지점
+                        result['data']['event'] = 'section_2'
 
-                elif 3290 < lap_distance < 3300 :
-                    # print('이제부터 직선 구간입니다')
-                    result['data']['event'] = 'straight'
+                    elif 3290 < lap_distance < 3300 :
+                        # print('이제부터 직선 구간입니다')
+                        result['data']['event'] = 'straight'
 
-                elif 4320 < lap_distance < 4340 :
-                    # 3/4 지점
-                    result['data']['event'] = 'section_3'
+                    elif 4320 < lap_distance < 4340 :
+                        # 3/4 지점
+                        result['data']['event'] = 'section_3'
 
-                elif 4800 < lap_distance < 4820 :
-                    # print('거의 다 왔습니다')
-                    result['data']['event'] = 'finish'
-                else:
-                    if random.random() < self.msg_rate:
-                        result['flag'] = 'random'
-                        random_events = [
-                            'tech', 
-                            'cheer', 
-                            'humor'
-                        ]
-                        result['data']['event'] = random.choice(random_events)
-                '''
-                + 이 외 lap_distance 일 때 random 하게 trigger하고, random한 pool에서 뽑하서 말하기
-                + 전체 랩길이 -> 데이터에 있음 -> 1/4 , 1/2, 3/4 지점 90% 지점
-                section_1
-                section_2
-                section_3
+                    elif 4800 < lap_distance < 4820 :
+                        # print('거의 다 왔습니다')
+                        result['data']['event'] = 'finish'
+                    else:
+                        if random.random() < self.msg_rate:
+                            result['flag'] = 'random'
+                            random_events = [
+                                'tech', 
+                                'cheer', 
+                                'humor'
+                            ]
+                            result['data']['event'] = random.choice(random_events)
+                    '''
+                    + 이 외 lap_distance 일 때 random 하게 trigger하고, random한 pool에서 뽑하서 말하기
+                    + 전체 랩길이 -> 데이터에 있음 -> 1/4 , 1/2, 3/4 지점 90% 지점
+                    section_1
+                    section_2
+                    section_3
 
-                '''
+                    '''
 
-                # if racestate == 3 and t ==1 :
-                #     t += 1
-                #     print('끝났습니다')
-                #     result['data']['event'] = 'finish'
+                    # if racestate == 3 and t ==1 :
+                    #     t += 1
+                    #     print('끝났습니다')
+                    #     result['data']['event'] = 'finish'
 
-                if lap_distance > 100:
-                    self.t = 0
+                    if lap_distance > 100:
+                        self.t = 0
 
-                if result['data']['event'] != '':
-                    self.r.hdel(self.target_ip,'msg')
-                    self.r.hset(self.target_ip, 'results', result)
+                    if result['data']['event'] != '':
+                        self.r.hdel(self.target_ip,'msg')
+                        self.r.hset(self.target_ip, 'results', result)
 
 
             time.sleep(0.4)

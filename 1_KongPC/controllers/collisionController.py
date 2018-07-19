@@ -26,6 +26,7 @@ class collisionChecker(mp.Process):
         # Variables
         self.acc_lap_distances = []
         self.msg_rate = 1
+        self.prev_crash = 0
 
     def run(self):
         while True:
@@ -64,22 +65,25 @@ class collisionChecker(mp.Process):
 
                         if random.random() < self.msg_rate:
                             if crash_state > 0:
-                                if crash_state == 1:
-                                    print(self.target_ip, "lv.1 충돌 발생")
+                                if self.prev_crash != crash_state:
+                                    if crash_state == 1:
+                                        print(self.target_ip, "lv.1 충돌 발생")
 
-                                elif crash_state == 2:
-                                    print(self.target_ip, "lv.2 충돌 발생")
+                                    elif crash_state == 2:
+                                        print(self.target_ip, "lv.2 충돌 발생")
 
-                                elif crash_state == 3:
-                                    print(self.target_ip, "lv.3 충돌 발생")
+                                    elif crash_state == 3:
+                                        print(self.target_ip, "lv.3 충돌 발생")
 
-                                result['data'] = {
-                                    'crash_state' : crash_state,
-                                    'moving' : True,
-                                    
-                                }
-                                self.r.hdel(self.target_ip,'msg')
-                                self.r.hset(self.target_ip, 'results', result)
+                                    result['data'] = {
+                                        'crash_state' : crash_state,
+                                        'moving' : True,
+                                        
+                                    }
+                                    self.r.hdel(self.target_ip,'msg')
+                                    self.r.hset(self.target_ip, 'results', result)
+
+                                    self.prev_crash = crash_state
                     time.sleep(0.4)
                     '''
                     # 이동없음 상태 판별
