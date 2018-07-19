@@ -55,10 +55,8 @@ class overtakeChecker(mp.Process):
         for sim in _sims:
             if sim[0] == target_ip:
                 target_name = sim[1]
-        print("TTT",target_name)
         if target_name:
             for i, p in enumerate(participants):
-                print(p['mName'])
                 if p['mName'] == target_name:
                     return i
 
