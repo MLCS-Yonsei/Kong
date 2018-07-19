@@ -136,6 +136,6 @@ class lapDistanceChecker(mp.Process):
                     self.r.hset(self.target_ip, 'results', result)
 
 
-            # time.sleep(0.5)
+            time.sleep(0.4)
                 
                 
