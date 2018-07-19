@@ -35,7 +35,7 @@ from audioPlayer import audioPlayer
 import serial
 import serial.tools.list_ports
 
-from pcars_stream.src.pcars.stream import PCarsStreamReceiver
+# from pcars_stream.src.pcars.stream import PCarsStreamReceiver
 
 def data_collect_start():
     # Checking Available Simulators
