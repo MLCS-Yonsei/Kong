@@ -80,43 +80,49 @@ class overtakeChecker(mp.Process):
 
                 # Codes
                 if "participants" in gamedata:
-                    ranks = self.get_rank(gamedata)
+                    sim_index = self.get_sim_name(self.target_ip,gamedata)
+                    lap_length = gamedata["eventInformation"]["mTrackLength"] # 랩 길이
+                    lap_completed = gamedata["participants"]["mParticipantInfo"][sim_index]["mLapsCompleted"]
+                    lap_distance = gamedata["participants"]["mParticipantInfo"][sim_index]["mCurrentLapDistance"] + lap_length * lap_completed
 
-                    if len(ranks) > 1:
-                        r0_t1 = ranks[self.get_sim_name(self.target_ip,gamedata)]
-                        
-                        if self.r0_t0 != 0:
+                    if lap_distance > 10:
+                        ranks = self.get_rank(gamedata)
+
+                        if len(ranks) > 1:
+                            r0_t1 = ranks[sim_index]
                             
-                            if self.r0_t0 > r0_t1:
-                                # Overtaked
-                                print(self.target_ip,'추월')
-                                self.c = ranks.index(r0_t1 + 1)
-                                self.status = True
-                            elif self.r0_t0 < r0_t1:
-                                # Overtaken
-                                print(self.target_ip,'추월당함')
-                                self.c = ranks.index(r0_t1 - 1)
-                                self.status = False
-                            else:
-                                self.c = False
+                            if self.r0_t0 != 0:
+                                
+                                if self.r0_t0 > r0_t1:
+                                    # Overtaked
+                                    print(self.target_ip,'추월')
+                                    self.c = ranks.index(r0_t1 + 1)
+                                    self.status = True
+                                elif self.r0_t0 < r0_t1:
+                                    # Overtaken
+                                    print(self.target_ip,'추월당함')
+                                    self.c = ranks.index(r0_t1 - 1)
+                                    self.status = False
+                                else:
+                                    self.c = False
 
-                        if self.c:
-                            c_name = gamedata["participants"]["mParticipantInfo"][self.c]["mName"]
-                            current_time = str(datetime.datetime.now())
+                            if self.c:
+                                c_name = gamedata["participants"]["mParticipantInfo"][self.c]["mName"]
+                                current_time = str(datetime.datetime.now())
 
-                            result = {}
-                            result['current_time'] = current_time
-                            result['target_ip'] = self.target_ip
-                            result['flag'] = 'overtake'
-                            result['data'] = {
-                                'status': self.status,
-                                'rank': r0_t1
-                            }
+                                result = {}
+                                result['current_time'] = current_time
+                                result['target_ip'] = self.target_ip
+                                result['flag'] = 'overtake'
+                                result['data'] = {
+                                    'status': self.status,
+                                    'rank': r0_t1
+                                }
 
-                            self.r.hdel(self.target_ip,'msg')
-                            self.r.hset(self.target_ip, 'results', result)
+                                self.r.hdel(self.target_ip,'msg')
+                                self.r.hset(self.target_ip, 'results', result)
 
-                        self.r0_t0 = r0_t1
+                            self.r0_t0 = r0_t1
 
     def stop(self):
         self.event.set()

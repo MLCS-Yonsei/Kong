@@ -28,7 +28,7 @@ class lapDistanceChecker(mp.Process):
         self.t = 0
 
         # Variables
-        self.msg_rate = 0.000000005
+        self.msg_rate = 0.00005
 
     def run(self):
         self.t = 0
@@ -94,7 +94,7 @@ class lapDistanceChecker(mp.Process):
                     # 1/2 지점
                     result['data']['event'] = 'section_2'
 
-                elif 3290 < lap_distance < 3310 :
+                elif 3290 < lap_distance < 3300 :
                     # print('이제부터 직선 구간입니다')
                     result['data']['event'] = 'straight'
 
