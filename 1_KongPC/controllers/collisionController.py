@@ -10,7 +10,7 @@ import os
 import signal
 
 import redis
-
+import random
 class collisionChecker(mp.Process):
 
     def __init__(self,que,r,target_ip):
