@@ -6,7 +6,7 @@ mlcs
         list : [
             {
                 location: 'KongVR',
-                ip: '222.107.244.45',
+                ip: 'kong.hwanmoo.kr',
                 status: 'offline',
                 functions: {
                     "dataCollect": false,
