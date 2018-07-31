@@ -45,7 +45,7 @@ def make_chunks(audio_segment, chunk_length):
 def play():
     req = request.args.get('path')
 
-    file_path = dir
+    file_path = os.path.join(dir,'bin')
     for p in req.split('/'):
         if len(p) is not 0:
             file_path = os.path.join(file_path,p)

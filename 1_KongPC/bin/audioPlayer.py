@@ -194,6 +194,10 @@ class audioPlayer():
             # 3구간
             audio_files =   list(range(152,153))
 
+        elif event == 'r_finish':
+            # 종료 후
+            audio_files =   list(range(168,177))
+
         if len(audio_files) > 0:
             audio_file = random.choice(audio_files)
             self.playFile(audio_file)
