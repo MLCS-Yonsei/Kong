@@ -8,18 +8,9 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
 from sort.sort import *
-from bin.color_extractor.color_extractor import ImageToColor
-
-from controllers.ageGenderController import *
-
-from multiprocessing import Process, Queue, Pipe
-
-sys.path.insert(0, './bin/age_gender')
-from age_gender_main import *
 
 import atexit
 
-import base64
 import time
 
 import socket
@@ -91,28 +82,30 @@ def detect_objects(image_np, sess, detection_graph, mot_tracker, r, local_ip):
         r.hdel('person_images_shape',local_ip)
         r.hdel('person_images',local_ip)
         r.hdel('person_attr',local_ip)
-
+    
         r.hset('person_images',local_ip,person_img.tobytes())
         r.hset('person_images_shape',local_ip,person_img.shape)
-        
+        # print("IMG Sent to server")    
         while True:
             msg = r.hget('person_attr',local_ip)
             if msg is not None:
-                # print(msg)
+                r.hdel('person_attr',local_ip)
+
+                results = eval(msg)
                 break    
 
         elapsed_time = time.time() - start_time
-        print(elapsed_time)
+        print("ET",elapsed_time)
         person_attr = {
             'age':1,
             'gender':1,
             'color':1
         }
-        # for r in results:
-        #     person_attr[r['flag']] = r['value']
+        for r in results:
+            person_attr[r['flag']] = r['value']
 
-        # print(person_attr)
-        # print(person_attr)
+        print(person_attr)
+
         # override boxes
         boxes = np.expand_dims(person_box, axis=0)
         classes = [1]

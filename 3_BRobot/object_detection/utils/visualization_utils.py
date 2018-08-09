@@ -630,13 +630,16 @@ def visualize_boxes_and_labels_on_image_array(
           if not display_str:
             display_str = '{}%'.format(int(100*scores[i]))
           else:
-            display_str = '{}: {}% [Gender:{},Age:{},Cloth Color:{}]'.format(display_str, int(100*scores[i]), attrs[i]['gender'], attrs[i]['age'], attrs[i]['color'])
+            if attrs is not None:
+              display_str = '{}: {}% [Gender:{},Age:{},Cloth Color:{}]'.format(display_str, int(100*scores[i]), attrs[i]['gender'], attrs[i]['age'], attrs[i]['color'])
+            else:
+              display_str = '{}: {}%'.format(display_str, int(100*scores[i]))
         box_to_display_str_map[box].append(display_str)
-        if agnostic_mode:
-          box_to_color_map[box] = 'DarkOrange'
-        else:
-          box_to_color_map[box] = STANDARD_COLORS[
-              classes[i] % len(STANDARD_COLORS)]
+        # if agnostic_mode:
+        box_to_color_map[box] = 'DarkOrange'
+        # else:
+        #   box_to_color_map[box] = STANDARD_COLORS[
+        #       int(classes[i]) % len(STANDARD_COLORS)]
 
   # Draw all boxes onto image.
   for box, color in box_to_color_map.items():

@@ -75,11 +75,23 @@ def detect_objects(image_np, sess, detection_graph, mot_tracker, img_to_color, f
             return img[starty:endy,startx:endx]
 
         def get_color(q, img):
-            c = img_to_color.get(img)
-            q.put({"flag":"color","value":c})
-            return c
+            try:
+                start_time = time.monotonic()
+                
+                c = img_to_color.get(img)
+                q.put({"flag":"color","value":c})
+
+                elapsed_time = time.monotonic() - start_time
+                print("Color", elapsed_time)
+            except:
+                q.put({"flag":"color","value":False})
+
 
         def detect_face(q, img, face_detect, face_queue, gender_queue, age_queue):
+
+            start_time = time.monotonic()
+            # your code
+            
             files = []
             
             faces, face_files, rectangles, tgtdir = face_detect.run(img)
@@ -93,6 +105,9 @@ def detect_objects(image_np, sess, detection_graph, mot_tracker, img_to_color, f
 
             q.put({"flag":"gender","value":person_gender})
             q.put({"flag":"age","value":person_age})
+
+            elapsed_time = time.monotonic() - start_time
+            print("Age/Gender", elapsed_time)
 
         person_img = crop_img(image_np,person_box)
 
@@ -116,11 +131,13 @@ def detect_objects(image_np, sess, detection_graph, mot_tracker, img_to_color, f
         for proc in procs:
             proc.join()
 
-        person_attr = {}
-        for r in results:
-            person_attr[r['flag']] = r['value']
+        person_attr = {
+            'age':1,
+            'gender':1,
+            'color':1
+        }
 
-        print(person_attr)
+
         # print(person_attr)
         # override boxes
         boxes = np.expand_dims(person_box, axis=0)
@@ -166,7 +183,7 @@ with detection_graph.as_default():
 import cv2
 import time
 
-CAM_ID = 0
+CAM_ID = 1
 cam = cv2.VideoCapture(CAM_ID)
 
 if cam.isOpened() == False:
@@ -196,8 +213,6 @@ with detection_graph.as_default():
 
         face_detect = face_detection_model('dlib', './bin/age_gender/Model/shape_predictor_68_face_landmarks.dat')
 
-        img_tx_conn, img_rc_conn = Pipe()
-        
         while (True):
             ret, frame = cam.read()
             
@@ -220,8 +235,6 @@ with detection_graph.as_default():
                 cv2.destroyWindow('Cam')
                 break
 
-            
-            
             # plt.figure(figsize=IMAGE_SIZE)
             # plt.imshow(image_process)
             # plt.show()
