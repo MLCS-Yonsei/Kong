@@ -1,7 +1,7 @@
 import sys
 import os
 import time
-
+sys.path.insert(0, '../3_BRobot/')
 import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
@@ -16,7 +16,7 @@ from controllers.ageGenderController import *
 
 from multiprocessing import Process, Queue, Pipe
 
-sys.path.insert(0, './bin/age_gender')
+sys.path.insert(0, '../3_BRobot/bin/age_gender')
 from age_gender_main import *
 
 CWD_PATH = os.getcwd()
