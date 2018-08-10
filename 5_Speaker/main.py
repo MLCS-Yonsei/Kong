@@ -13,7 +13,7 @@ while True:
             파악이 끝나면 기본 안내멘트 재생.
             재생 후 양손이 디텍트되면 게임 스타트 매크로 시작. + 스타트 멘트 재생
             '''
-            pass
+            playFile(target_ip,'test_intro')
         elif stage == 2:
             '''
             로딩중 별다른 액션 없음
