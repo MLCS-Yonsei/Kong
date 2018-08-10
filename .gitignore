@@ -1,8 +1,10 @@
 1_KongPC/results/*
 3_BRobot/bin/age_gender/results/*
+5_Speaker/bin/age_gender/results/*
 .DS_Store
 *.pyc
 */__pycache__
+graph_opt.pb
 
 2_controlServer/node_modules/*
 *.pyc
