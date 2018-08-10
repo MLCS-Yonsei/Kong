@@ -50,7 +50,7 @@ def play():
         if len(p) is not 0:
             file_path = os.path.join(file_path,p)
 
-    seg = AudioSegment.from_mp3(file_path)
+    seg = AudioSegment.from_wav(file_path)
     p = pyaudio.PyAudio()
     stream = p.open(format=pyaudio.paInt32,
                     channels=seg.channels,
