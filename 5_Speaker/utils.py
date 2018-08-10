@@ -19,7 +19,7 @@ def crop_img(img,box):
 def playFile(target_ip, file_path):
     print("Playing...",file_path)
     file_path = str(file_path) + '.wav'
-    sound = AudioSegment.from_wav('./audio/' + file_path)
+    sound = AudioSegment.from_wav('./bin/audio/' + file_path)
     url = 'http://' + target_ip.split(':')[0] + ':3000/play?path=/audio/' + file_path
     r = requests.get(url)
 
