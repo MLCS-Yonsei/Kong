@@ -13,6 +13,9 @@ from pydub import AudioSegment
 from pydub.playback import play
 import pyaudio
 
+from pywinauto.application import Application
+from pywinauto.keyboard import SendKeys
+
 from math import log, ceil, floor
 
 dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +43,6 @@ def make_chunks(audio_segment, chunk_length):
     return [audio_segment[i * chunk_length:(i + 1) * chunk_length]
             for i in range(int(number_of_chunks))]
 
-
 @app.route('/play', methods=['GET'])
 def play():
     req = request.args.get('path')
@@ -67,6 +69,25 @@ def play():
 
     time.sleep(seg.duration_seconds)
 
+    return jsonify({}), 200
+
+@app.route('/start', methods=['GET'])
+def play():
+    # Move to bottom of the menu
+    cmd = 'J'
+    SendKeys(cmd)
+
+    for i in range(1,6):
+        cmd = '{UP}'
+        SendKeys(cmd)
+
+        cmd = '{LEFT}'
+        SendKeys(cmd)
+
+    # Hit Return
+    cmd = '{ENTER}'
+    SendKeys(cmd)
+  
     return jsonify({}), 200
 
 if __name__ == '__main__':
