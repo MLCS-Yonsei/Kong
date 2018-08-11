@@ -5,6 +5,7 @@ from crop_detection import Detector
 import time
 from threading import Thread
 
+import requests 
 
 target_ips = ['ubuntu.hwanmoo.kr:8080']
 
@@ -56,6 +57,9 @@ while True:
                 if pose_result == 1:
                     a_thread = Thread(target = playFile, args = (target_ip,'test_gamestart', ))
                     a_thread.start()
+
+                    url = 'http://' + target_ip.split(':')[0] + ':3000/start'
+                    r = requests.get(url)
 
                     a_thread.join()
 

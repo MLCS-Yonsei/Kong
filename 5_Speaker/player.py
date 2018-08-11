@@ -72,7 +72,7 @@ def play():
     return jsonify({}), 200
 
 @app.route('/start', methods=['GET'])
-def play():
+def start():
     # Move to bottom of the menu
     cmd = 'J'
     SendKeys(cmd)
