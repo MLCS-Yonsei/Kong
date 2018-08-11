@@ -67,7 +67,7 @@ def play():
     stream.close()
     p.terminate()
 
-    time.sleep(seg.duration_seconds)
+    # time.sleep(seg.duration_seconds)
 
     return jsonify({}), 200
 

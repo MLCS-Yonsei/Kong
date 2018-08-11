@@ -68,7 +68,8 @@ class Detector():
                 tf.import_graph_def(od_graph_def, name='')
 
 
-        self.right_clicks = [[375, 41], [1000, 709]]
+        self.right_clicks = []
+        # self.right_clicks = [[375, 41], [1000, 709]]
         # mouse callback function
         def mouse_callback(event, x, y, flags, params):
             #right-click event value is 2
@@ -263,12 +264,16 @@ class Detector():
                         try:
                             image_process, person_attr = self.detect_objects(cropped_img, sess, self.detection_graph, mot_tracker, img_to_color, face_detect, self.face_queue, self.gender_queue, self.age_queue)
                             print("####", person_attr)
-                            if person_attr['gender'] != 'NA' and person_attr['gender'] != False:
-                                break
+                            if isinstance(person_attr, list):
+                                if person_attr[0]['gender'] != 'NA' and person_attr[0]['gender'] != False:
+                                    break
+                            else:
+                                if person_attr['gender'] != 'NA' and person_attr['gender'] != False:
+                                    break
 
                         except Exception as e:
                             print(e)
-                            break
+                            pass
                         
                     
                     curTime = time.time()
@@ -298,11 +303,14 @@ class Detector():
     def detect_stop(self):
         # self.cam.release()
         # cv2.destroyWindow(self.window_name)
-
+        print("Detect Stop")
         self.process_gender.join()
         self.process_age.join()
 
+        return True
+
     def pose_start(self):
+        print("Pose Start")
         result = False
         while (True):
             ret, frame = self.cam.read()
@@ -322,7 +330,7 @@ class Detector():
 
                 humans = self.e.inference(cropped_img, resize_to_default=(self.w > 0 and self.h > 0), upsample_size=4.0)
                 if len(humans) > 0:
-                    if 7 in humans[0].body_parts and 4 in humans[0].body_parts:
+                    if 7 in humans[0].body_parts or 4 in humans[0].body_parts:
                         print("Hands Detected")
                         result = 1
                         break

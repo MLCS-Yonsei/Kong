@@ -12,7 +12,9 @@ target_ips = ['ubuntu.hwanmoo.kr:8080']
 variables = {}
 for target_ip in target_ips:
     variables[target_ip] = {
-        'person_attr': None
+        'person_attr': None,
+        'intro': False,
+        'playing': False,
     }
 
 for target_ip in target_ips:
@@ -24,7 +26,8 @@ while True:
     for target_ip in target_ips:
         stage, gamedata = get_crest_data(target_ip)
         _v = variables[target_ip]
-        if stage == 1:
+        # print("#2")
+        if stage == 1 and _v['playing'] == False:
             '''
             로비에서 대기중인 상황.
             crop_detector로 모니터링하다가 사람이 탑승하면 age/gender/color 파악하고 정보 저장.
@@ -44,19 +47,27 @@ while True:
                     if person_attr[0]['gender'] != 'NA' and person_attr[0]['gender'] != False:
                         _v['person_attr'] = person_attr[0]
                         # d.detect_stop()
+
+                print("#1")
             else:
-                # a_thread = Thread(target = playFile, args = (target_ip,'test_intro', ))
-                # a_thread.start()
+                if _v['playing'] == False:
+                    a_thread = Thread(target = playFile, args = (target_ip,'test_intro', ))
+                    a_thread.start()
 
                 print("Playing intro file, sleep for ", 27, "Seconds")
                 
-                # a_thread.join()
-
                 pose_result = d.pose_start()
+
+                if _v['playing'] == False:
+                    a_thread.join()
+
+                print("#3", pose_result)
 
                 if pose_result == 1:
                     a_thread = Thread(target = playFile, args = (target_ip,'test_gamestart', ))
                     a_thread.start()
+
+                    _v['playing'] = True
 
                     url = 'http://' + target_ip.split(':')[0] + ':3000/start'
                     r = requests.get(url)
