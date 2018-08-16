@@ -13,6 +13,10 @@ from pydub import AudioSegment
 from pydub.playback import play
 import pyaudio
 
+import win32ui
+import win32gui
+import win32com.client
+
 from pywinauto.application import Application
 from pywinauto.keyboard import SendKeys
 
@@ -74,6 +78,13 @@ def play():
 @app.route('/start', methods=['GET'])
 def start():
     # Move to bottom of the menu
+    shell = win32com.client.Dispatch("WScript.Shell")
+    shell.SendKeys('%')
+    
+    PyCWnd1 = win32ui.FindWindow( None, "Project CARS™" )
+    PyCWnd1.SetForegroundWindow()
+    PyCWnd1.SetFocus()
+    
     cmd = 'J'
     SendKeys(cmd)
 
